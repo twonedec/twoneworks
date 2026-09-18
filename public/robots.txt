@@ -1,7 +1,8 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dadanote.net/sitemap-index.xml
+Sitemap: https://twoneworks.com/sitemap-index.xml
 
 User-agent: Yeti
 Allow: /
+
