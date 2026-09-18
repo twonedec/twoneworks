@@ -50,7 +50,16 @@ import Layout from '../layouts/Layout.astro';
 }
 .section-title {
   font-family: var(--sans); font-weight: 700;
-  font-size: 28px; letter-spacing: -.02em; color: var(--ink);
+  font-size: 26px; letter-spacing: -.02em; color: var(--ink);
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px;
+}
+.sub-en {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 .grid-3 {
   display: grid;
@@ -75,7 +84,7 @@ import Layout from '../layouts/Layout.astro';
   font-family: var(--mono);
   font-size: 12px;
   color: var(--muted);
-  letter-spacing: .1em;
+  letter-spacing: .08em;
 }
 .focus-title {
   font-family: var(--sans);
@@ -90,7 +99,7 @@ import Layout from '../layouts/Layout.astro';
   color: var(--ink-2);
 }
 
-/* ── Commercial Solutions ───────────────────────────── */
+/* ── Tools ─────────────────────────────────────────── */
 .solution-box {
   background: var(--bg-soft);
   border: 1px solid var(--line-s);
@@ -142,18 +151,18 @@ import Layout from '../layouts/Layout.astro';
 <!-- Masthead -->
 <section class="masthead">
   <div class="masthead-strip reveal">
-    <span>TWONEWORKS STUDIO</span>
-    <span>{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase()}</span>
+    <span>TWONEWORKS</span>
+    <span>{new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
   </div>
 
   <div class="hero-inner">
-    <p class="hero-eyebrow reveal">ENGINEERING & AUTOMATION LAB</p>
+    <p class="hero-eyebrow reveal">개인 작업실 · PERSONAL DEV LAB</p>
     <h1 class="hero-title reveal" style="transition-delay:.1s">
       필요한 도구는 직접 만들고,<br>
-      시스템은 <em>실전에서 검증</em>합니다.
+      실전에서 <em>검증하고 씁니다</em>.
     </h1>
     <p class="hero-body reveal" style="transition-delay:.2s">
-      Twoneworks는 반복되는 수작업을 1초로 압축하는 데이터 자동화 솔루션과 주식 퀀트 분석 파이프라인을 설계하고 직접 구축하는 1인 소프트웨어 엔지니어링 스튜디오입니다.
+      일상의 반복 작업을 줄이는 데이터 자동화 스크립트부터 주식 퀀트 분석, 홈서버와 ESP32 소형 기기까지 직접 만들어보고 기록하는 1인 개발자의 작업 공간입니다.
     </p>
   </div>
 </section>
@@ -161,51 +170,57 @@ import Layout from '../layouts/Layout.astro';
 <!-- Focus Areas -->
 <section class="section">
   <div class="section-head reveal">
-    <h2 class="section-title">Core Engineering Fields</h2>
+    <h2 class="section-title">
+      만들고 다루는 것들
+      <span class="sub-en">What I Build</span>
+    </h2>
   </div>
 
   <div class="grid-3">
     <div class="focus-card reveal">
-      <span class="focus-num">01 / AUTOMATION</span>
-      <h3 class="focus-title">데이터 파이프라인 & 자동화</h3>
+      <span class="focus-num">01 / 데이터 자동화 · AUTOMATION</span>
+      <h3 class="focus-title">데이터 수집 & 자동화 스크립트</h3>
       <p class="focus-desc">
-        네이버 검색광고 API 및 네이버 클라우드 API HUB를 실시간 연동하여 대용량 키워드 전수조사, 상업성 지표 산출, 자동 분석 리포팅 시스템을 개발합니다.
+        반복되는 수작업을 줄이기 위해 네이버 검색광고 API 기반 키워드 추출과 자동 분석 도구들을 만듭니다.
       </p>
     </div>
 
     <div class="focus-card reveal" style="transition-delay:.08s">
-      <span class="focus-num">02 / QUANT</span>
-      <h3 class="focus-title">주식 퀀트 & 알고리즘</h3>
+      <span class="focus-num">02 / 주식 퀀트 · QUANT</span>
+      <h3 class="focus-title">퀀트 데이터 & 투자 스크리너</h3>
       <p class="focus-desc">
-        DART 전자공시 재무제표와 실시간 시장 데이터를 연결하여 피터 린치 GARP, 안전마진, 세력 수급 3중 스크리너 알고리즘을 구축합니다.
+        DART 전자공시 재무제표와 주가 데이터를 연결해 직접 투자에 활용하고 검증하는 스크리너를 연구합니다.
       </p>
     </div>
 
     <div class="focus-card reveal" style="transition-delay:.16s">
-      <span class="focus-num">03 / INFRA & IOT</span>
-      <h3 class="focus-title">인프라 & 임베디드</h3>
+      <span class="focus-num">03 / 인프라 & 홈랩 · INFRA & IOT</span>
+      <h3 class="focus-title">홈서버 환경 & ESP32 DIY</h3>
       <p class="focus-desc">
-        시놀로지 NAS 2.5GbE 네트워크 고속화, 오라클 클라우드 무중단 컨테이너 서버, ESP32 기반 엣지 AI 기기를 직접 설계하고 운영합니다.
+        시놀로지 NAS와 홈랩 환경, 그리고 실생활에서 재미있게 쓸 수 있는 ESP32 소형 기기들을 만지작거립니다.
       </p>
     </div>
   </div>
 </section>
 
-<!-- Commercial Solution Showcase -->
+<!-- Tools Showcase -->
 <section class="section">
   <div class="section-head reveal">
-    <h2 class="section-title">Commercial Solutions</h2>
+    <h2 class="section-title">
+      만들어둔 도구
+      <span class="sub-en">Tools</span>
+    </h2>
   </div>
 
   <div class="solution-box reveal">
     <div class="solution-info">
-      <h3>네이버 블로그 키워드 추출기 (윈도우 영구소장 프로그램)</h3>
+      <h3>네이버 블로그 키워드 추출기 (윈도우 프로그램)</h3>
       <p>
-        시드 키워드 자동 확장부터 검색량·경쟁률 3중 필터링, 월간 조회수 분석까지 엑셀로 원클릭 산출하는 영구 소장용 상용 프로그램입니다.
+        시드 키워드 자동 확장부터 검색량·발행일자 분석까지 엑셀로 한 번에 정리하는 실전용 프로그램입니다.
       </p>
     </div>
     <a href="https://kmong.com/gig/785584" target="_blank" rel="noopener noreferrer" class="solution-btn">
-      크몽에서 솔루션 보기 ↗
+      크몽에서 살펴보기 ↗
     </a>
   </div>
 </section>
