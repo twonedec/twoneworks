@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 480" width="100%" height="100%" style="background-color: #FAFBFC; font-family: 'Pretendard', -apple-system, sans-serif;">
+  <!-- Title & Subtitle -->
+  <text x="425" y="45" text-anchor="middle" font-size="20" font-weight="700" fill="#1D2939">아키텍처 리팩토링 전/후 월간 운용 비용 최적화 지표 (TCO)</text>
+  <text x="425" y="65" text-anchor="middle" font-size="13" fill="#475467">단일 고성능 LLM 레이어 ➔ 다단 계층화(Tiering) 전환 비교</text>
+
+  <!-- Chart Background Grid -->
+  <g stroke="#E4E7EC" stroke-width="1">
+    <line x1="80" y1="120" x2="770" y2="120" stroke-dasharray="4 4"/>
+    <line x1="80" y1="200" x2="770" y2="200" stroke-dasharray="4 4"/>
+    <line x1="80" y1="280" x2="770" y2="280" stroke-dasharray="4 4"/>
+    <line x1="80" y1="360" x2="770" y2="360" /> <!-- Base Line -->
+  </g>
+
+  <!-- Y-Axis Labels -->
+  <text x="65" y="124" text-anchor="end" font-size="12" fill="#667085">$30+</text>
+  <text x="65" y="204" text-anchor="end" font-size="12" fill="#667085">$20</text>
+  <text x="65" y="284" text-anchor="end" font-size="12" fill="#667085">$10</text>
+  <text x="65" y="364" text-anchor="end" font-size="12" fill="#667085">$0</text>
+
+  <!-- Bar 1: Initial Architecture (Sonnet 단일) -->
+  <g transform="translate(180, 0)">
+    <rect x="0" y="110" width="140" height="250" rx="6" fill="#FEE4E2" stroke="#F04438" stroke-width="2"/>
+    <text x="70" y="95" text-anchor="middle" font-size="18" font-weight="700" fill="#B42318">약 $30 ~ $45</text>
+    
+    <!-- X-Axis Label -->
+    <text x="70" y="390" text-anchor="middle" font-size="14" font-weight="700" fill="#344054">초기 프로토타입</text>
+    <text x="70" y="410" text-anchor="middle" font-size="12" fill="#667085">단일 Sonnet 집중 병목</text>
+  </g>
+
+  <!-- Bar 2: Target Architecture (Refactored) -->
+  <g transform="translate(530, 0)">
+    <rect x="0" y="305" width="140" height="55" rx="6" fill="#D1FAE5" stroke="#12B76A" stroke-width="2"/>
+    <text x="70" y="290" text-anchor="middle" font-size="18" font-weight="700" fill="#027A48">안정화: $6.5</text>
+    
+    <!-- X-Axis Label -->
+    <text x="70" y="390" text-anchor="middle" font-size="14" font-weight="700" fill="#344054">최종 아키텍처 (현재)</text>
+    <text x="70" y="410" text-anchor="middle" font-size="12" fill="#667085">레이어 분산 (Gemini 혼합)</text>
+  </g>
+
+  <!-- Reduction Arrow & Badge -->
+  <g transform="translate(370, 200)">
+    <!-- Curving Arrow -->
+    <path d="M -30 -10 Q 30 -30 110 50" fill="none" stroke="#98A2B3" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+    
+    <!-- Highlight Badge -->
+    <rect x="0" y="0" width="100" height="30" rx="15" fill="#1D2939"/>
+    <text x="50" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">▼ 78.3% 절감</text>
+  </g>
+
+  <!-- Bottom Details Box (BOM Table) -->
+  <rect x="80" y="440" width="690" height="25" rx="4" fill="#F2F4F7"/>
+  <text x="425" y="457" text-anchor="middle" font-size="11" font-weight="600" fill="#475467">
+    [현재 TCO 상세 내역] Claude Sonnet($1.4) + Haiku($0.1) + Brave Search($5.0) + Gemini/KIS API(무료) = Total $6.5
+  </text>
+</svg>

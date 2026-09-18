@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About — Twoneworks">
+<style>
+.about-wrap {
+  max-width: 740px; margin: 0 auto; padding: 72px 24px 120px;
+}
+.about-kicker {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 28px;
+  display: flex; align-items: center; gap: 12px;
+}
+.about-kicker::before { content: ""; width: 32px; height: 1px; background: var(--muted); }
+.about-title {
+  font-family: var(--sans); font-weight: 700;
+  font-size: clamp(36px, 4.5vw, 56px);
+  line-height: 1.15; letter-spacing: -.03em;
+  color: var(--ink); margin-bottom: 36px;
+}
+.about-lead {
+  font-size: 18px;
+  line-height: 1.8; color: var(--ink-2);
+  border-left: 2px solid var(--line-s); padding-left: 24px;
+  margin-bottom: 48px;
+}
+.about-section {
+  margin-bottom: 40px;
+}
+.about-section h2 {
+  font-family: var(--sans); font-weight: 700;
+  font-size: 20px; letter-spacing: -.01em;
+  color: var(--ink); margin-bottom: 16px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--line);
+}
+.about-section p {
+  font-size: 16px; line-height: 1.8;
+  color: var(--ink-2); margin-bottom: 14px;
+}
+.contact-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 15px; font-weight: 600;
+  color: #0284c7; text-decoration: none;
+}
+</style>
+
+<div class="about-wrap">
+  <p class="about-kicker reveal">About</p>
+  <h1 class="about-title reveal" style="transition-delay:.06s">
+    필요한 도구를 직접 만들고<br>실전에서 증명하는 스튜디오
+  </h1>
+  <p class="about-lead reveal" style="transition-delay:.1s">
+    Twoneworks는 반복되는 수작업을 1초로 단축하는 데이터 자동화 솔루션과 주식 퀀트 분석 엔진을 직접 설계하고 서비스하는 1인 소프트웨어 엔지니어링 스튜디오입니다.
+  </p>
+
+  <div class="about-section reveal">
+    <h2>운영 철학</h2>
+    <p>말뿐인 이론 대신, 실제로 동작하고 가치를 만들어내는 코드를 믿습니다. 모든 프로그램은 직접 필드에서 굴려보며 겪은 수많은 시행착오와 검증을 거쳐 완성됩니다.</p>
+  </div>
+
+  <div class="about-section reveal">
+    <h2>주요 영역</h2>
+    <p>• <strong>데이터 자동화 솔루션</strong>: 대용량 키워드 전수조사 및 상업성 분석 윈도우 무제한 프로그램 제작</p>
+    <p>• <strong>퀀트 엔지니어링</strong>: DART 전자공시 재무제표와 주가를 결합한 3중 전종목 스크리너</p>
+    <p>• <strong>인프라 & 엣지 컴퓨팅</strong>: 고속 홈 네트워크(NAS 2.5GbE) 및 ESP32 임베디드 AI 기기 개발</p>
+  </div>
+
+  <div class="about-section reveal">
+    <h2>Contact</h2>
+    <p>솔루션 문의, 기술 제휴 및 커스텀 개발 요청은 이메일로 연락해주세요.</p>
+    <a href="mailto:admin@twoneworks.com" class="contact-link">
+      admin@twoneworks.com →
+    </a>
+  </div>
+</div>
+</Layout>

@@ -1,0 +1,212 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Twoneworks — 1인 개발 스튜디오 & 엔지니어링 랩">
+<style>
+/* ── Masthead ───────────────────────────────────────── */
+.masthead {
+  padding: 88px 56px 80px;
+  border-bottom: 1px solid var(--line);
+}
+.masthead-strip {
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px; margin-bottom: 56px;
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  letter-spacing: .12em; text-transform: uppercase;
+}
+.hero-inner {
+  max-width: 860px;
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px; font-weight: 700; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 24px;
+}
+.hero-title {
+  font-family: var(--sans); font-weight: 700;
+  font-size: clamp(38px, 5.5vw, 64px);
+  line-height: 1.15; letter-spacing: -.03em; color: var(--ink);
+  margin-bottom: 32px;
+}
+.hero-title em {
+  font-style: normal;
+  color: #0284c7;
+}
+.hero-body {
+  font-size: 18px; line-height: 1.8;
+  color: var(--ink-2); font-weight: 400; max-width: 720px;
+  margin-bottom: 40px;
+}
+
+/* ── Focus Areas ─────────────────────────────────────── */
+.section {
+  padding: 88px 56px;
+  border-bottom: 1px solid var(--line);
+}
+.section-head {
+  margin-bottom: 48px;
+}
+.section-title {
+  font-family: var(--sans); font-weight: 700;
+  font-size: 28px; letter-spacing: -.02em; color: var(--ink);
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.focus-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform .3s var(--ease-out), border-color .3s;
+}
+.focus-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--line-s);
+}
+.focus-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .1em;
+}
+.focus-title {
+  font-family: var(--sans);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -.015em;
+}
+.focus-desc {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+/* ── Commercial Solutions ───────────────────────────── */
+.solution-box {
+  background: var(--bg-soft);
+  border: 1px solid var(--line-s);
+  border-radius: 16px;
+  padding: 48px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+  margin-top: 24px;
+}
+.solution-info h3 {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.solution-info p {
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.solution-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ink);
+  color: var(--bg-elev);
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14.5px;
+  text-decoration: none !important;
+  white-space: nowrap;
+  transition: opacity .2s;
+}
+.solution-btn:hover {
+  opacity: .88;
+}
+
+@media (max-width: 900px) {
+  .grid-3 { grid-template-columns: 1fr; }
+  .solution-box { flex-direction: column; align-items: flex-start; }
+  .masthead, .section { padding-left: 24px; padding-right: 24px; }
+}
+</style>
+
+<!-- Masthead -->
+<section class="masthead">
+  <div class="masthead-strip reveal">
+    <span>TWONEWORKS STUDIO</span>
+    <span>{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase()}</span>
+  </div>
+
+  <div class="hero-inner">
+    <p class="hero-eyebrow reveal">ENGINEERING & AUTOMATION LAB</p>
+    <h1 class="hero-title reveal" style="transition-delay:.1s">
+      필요한 도구는 직접 만들고,<br>
+      시스템은 <em>실전에서 검증</em>합니다.
+    </h1>
+    <p class="hero-body reveal" style="transition-delay:.2s">
+      Twoneworks는 반복되는 수작업을 1초로 압축하는 데이터 자동화 솔루션과 주식 퀀트 분석 파이프라인을 설계하고 직접 구축하는 1인 소프트웨어 엔지니어링 스튜디오입니다.
+    </p>
+  </div>
+</section>
+
+<!-- Focus Areas -->
+<section class="section">
+  <div class="section-head reveal">
+    <h2 class="section-title">Core Engineering Fields</h2>
+  </div>
+
+  <div class="grid-3">
+    <div class="focus-card reveal">
+      <span class="focus-num">01 / AUTOMATION</span>
+      <h3 class="focus-title">데이터 파이프라인 & 자동화</h3>
+      <p class="focus-desc">
+        네이버 검색광고 API 및 네이버 클라우드 API HUB를 실시간 연동하여 대용량 키워드 전수조사, 상업성 지표 산출, 자동 분석 리포팅 시스템을 개발합니다.
+      </p>
+    </div>
+
+    <div class="focus-card reveal" style="transition-delay:.08s">
+      <span class="focus-num">02 / QUANT</span>
+      <h3 class="focus-title">주식 퀀트 & 알고리즘</h3>
+      <p class="focus-desc">
+        DART 전자공시 재무제표와 실시간 시장 데이터를 연결하여 피터 린치 GARP, 안전마진, 세력 수급 3중 스크리너 알고리즘을 구축합니다.
+      </p>
+    </div>
+
+    <div class="focus-card reveal" style="transition-delay:.16s">
+      <span class="focus-num">03 / INFRA & IOT</span>
+      <h3 class="focus-title">인프라 & 임베디드</h3>
+      <p class="focus-desc">
+        시놀로지 NAS 2.5GbE 네트워크 고속화, 오라클 클라우드 무중단 컨테이너 서버, ESP32 기반 엣지 AI 기기를 직접 설계하고 운영합니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Commercial Solution Showcase -->
+<section class="section">
+  <div class="section-head reveal">
+    <h2 class="section-title">Commercial Solutions</h2>
+  </div>
+
+  <div class="solution-box reveal">
+    <div class="solution-info">
+      <h3>네이버 블로그 키워드 추출기 (윈도우 영구소장 프로그램)</h3>
+      <p>
+        시드 키워드 자동 확장부터 검색량·경쟁률 3중 필터링, 월간 조회수 분석까지 엑셀로 원클릭 산출하는 영구 소장용 상용 프로그램입니다.
+      </p>
+    </div>
+    <a href="https://kmong.com/gig/785584" target="_blank" rel="noopener noreferrer" class="solution-btn">
+      크몽에서 솔루션 보기 ↗
+    </a>
+  </div>
+</section>
+</Layout>
