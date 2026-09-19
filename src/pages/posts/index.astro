@@ -40,24 +40,48 @@ posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 }
 
 .post-item {
-  display: block;
-  padding: 32px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  padding: 24px 28px;
   border-radius: 14px;
   border: 1px solid var(--line);
   background: var(--bg-elev);
   text-decoration: none !important;
   margin-bottom: 20px;
-  transition: transform .25s var(--ease-out), border-color .25s;
+  transition: transform .25s var(--ease-out), border-color .25s, box-shadow .25s;
 }
 .post-item:hover {
   transform: translateY(-3px);
   border-color: var(--line-s);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+.post-item-thumb-box {
+  width: 220px;
+  min-width: 220px;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0f172a;
+}
+.post-item-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .3s ease;
+}
+.post-item:hover .post-item-thumb {
+  transform: scale(1.04);
+}
+.post-item-content {
+  flex: 1;
+  min-width: 0;
 }
 .post-item-top {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   font-family: var(--mono);
   font-size: 11.5px;
 }
@@ -71,18 +95,31 @@ posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 }
 .post-item-title {
   font-family: var(--sans);
-  font-size: 21px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--ink);
   letter-spacing: -.02em;
   line-height: 1.4;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 .post-item-summary {
-  font-size: 14.5px;
-  line-height: 1.65;
+  font-size: 14px;
+  line-height: 1.6;
   color: var(--ink-2);
   margin: 0;
+}
+
+@media (max-width: 680px) {
+  .post-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    padding: 20px;
+  }
+  .post-item-thumb-box {
+    width: 100%;
+    min-width: 100%;
+  }
 }
 </style>
 
@@ -98,14 +135,26 @@ posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
   <div class="posts-list">
     {posts.map(post => (
       <a href={`/posts/${post.id}/`} class="post-item">
-        <div class="post-item-top">
-          <span class="post-item-cat">{post.data.category}</span>
-          <time class="post-item-date">
-            {post.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </time>
+        {post.data.thumbnail && (
+          <div class="post-item-thumb-box">
+            <img 
+              src={post.data.thumbnail} 
+              alt={post.data.title} 
+              class="post-item-thumb" 
+              loading="lazy" 
+            />
+          </div>
+        )}
+        <div class="post-item-content">
+          <div class="post-item-top">
+            <span class="post-item-cat">{post.data.category}</span>
+            <time class="post-item-date">
+              {post.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </time>
+          </div>
+          <h2 class="post-item-title">{post.data.title}</h2>
+          <p class="post-item-summary">{post.data.summary}</p>
         </div>
-        <h2 class="post-item-title">{post.data.title}</h2>
-        <p class="post-item-summary">{post.data.summary}</p>
       </a>
     ))}
   </div>

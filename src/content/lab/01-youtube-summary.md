@@ -3,6 +3,7 @@ title: "유튜브 30분 영상, 3초 만에 3줄 핵심 요약하는 제미나�
 summary: "유튜브 숏폼 영상에서 소개한 바로 그 프롬프트입니다. 자막 스크립트를 넣고 복사 한 번으로 핵심 요약, 실행 팁, 주의사항까지 한눈에 정리하세요."
 date: 2026-09-15
 categoryBadge: "AI PROMPT"
+thumbnail: "/images/lab/thumb-01-youtube-summary.png"
 tags: ["유튜브요약", "제미나이", "프롬프트", "AI활용"]
 ---
 

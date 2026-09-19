@@ -3,6 +3,7 @@ title: "피터 린치 실적 폭발 GARP 공식: 10배 오를 저평가 성장�
 summary: "유튜브 숏폼에서 소개한 '피터 린치 GARP(합리적 가격의 성장주) 퀀트 판정 파이썬 코드'입니다. 단순히 싼 주식(저PER)에 물리지 않고, 연간 이익 성장률 대비 극단적 저평가(PEG < 1.0) 상태에 놓인 알짜 종목을 10초 만에 판별하는 공식을 공개합니다."
 date: 2026-09-17
 categoryBadge: "QUANT STOCK"
+thumbnail: "/images/lab/thumb-01-stock-garp.png"
 tags: ["피터린치", "퀀트투자", "GARP", "PEG공식", "파이썬주식", "저평가성장주"]
 draft: false
 ---

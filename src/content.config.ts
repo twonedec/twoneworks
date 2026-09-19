@@ -8,6 +8,7 @@ const labCollection = defineCollection({
     summary: z.string(),
     date: z.date(),
     categoryBadge: z.string().optional().default("AI PROMPT"),
+    thumbnail: z.string().optional(),
     tips: z.array(z.string()).optional(),
     tags: z.array(z.string()).optional(),
     draft: z.boolean().optional().default(false),
@@ -21,6 +22,7 @@ const postsCollection = defineCollection({
     summary: z.string(),
     date: z.date(),
     category: z.string().optional().default("데이터 자동화 · AUTOMATION"),
+    thumbnail: z.string().optional(),
     tags: z.array(z.string()).optional(),
     draft: z.boolean().optional().default(false),
   })

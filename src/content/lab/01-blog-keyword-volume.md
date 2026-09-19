@@ -3,6 +3,7 @@ title: "네이버 블로그 조회수 0명 탈출: 검색량 vs 총문서수 1�
 summary: "유튜브 숏폼에서 소개한 '실시간 네이버 데이터 조회 파이썬 스크립트'입니다. 네이버 API를 연동해 키워드 1개의 월간 검색량과 블로그 총 발행량을 1초 만에 조회하고, 초보 블로거도 상위 노출되는 알짜 빈집 키워드를 선별하는 실전 코드를 공개합니다."
 date: 2026-09-16
 categoryBadge: "BLOG KEYWORD"
+thumbnail: "/images/lab/thumb-01-blog-volume.png"
 tags: ["네이버블로그", "황금키워드", "네이버API", "파이썬자동화"]
 draft: false
 ---

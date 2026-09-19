@@ -3,6 +3,7 @@ title: "직접 쓰려고 만든 네이버 블로그 키워드 자동 추출기 �
 summary: "블로그 글 하나 쓰기 위해 키워드 사이트 서너 개를 띄워놓고 일일이 복사-붙여넣기하던 비효율을 끝내기 위해, 네이버 검색광고 API로 직접 구축한 엑셀 원클릭 키워드 추출 도구의 제작 및 실전 적용기입니다."
 date: 2026-09-19
 category: "데이터 자동화 · AUTOMATION"
+thumbnail: "/images/lab/thumb-post-01-keyword-extractor.png"
 tags: ["네이버 블로그", "키워드 자동화", "도구 제작기", "생산성"]
 draft: false
 ---
