@@ -13,14 +13,6 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 
-// 연관 자료실 글 및 다른 포스트 가져오기
-const allLab = await getCollection('lab', ({ data }) => !data.draft);
-const allPosts = await getCollection('posts', ({ data }) => !data.draft && data.title !== post.data.title);
-
-// 블로그 주제면 블로그 키워드 자료실 글들을 추천
-const isBlogTopic = post.id.includes('blog') || (post.data.tags && post.data.tags.some(t => t.includes('블로그') || t.includes('키워드')));
-const relatedLabList = allLab.filter(item => isBlogTopic ? item.id.includes('blog') : true).slice(0, 2);
-
 const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
   year: 'numeric', month: 'long', day: 'numeric'
 });
@@ -216,125 +208,9 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
   opacity: .88;
 }
 
-/* ── Related / 다른 글 카드 섹션 ─────────────────── */
-.post-related-section {
-  margin-top: 64px;
-  padding-top: 48px;
-  border-top: 1px solid var(--line);
-}
-.post-related-header {
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-.post-related-title {
-  font-family: var(--sans);
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--ink);
-  letter-spacing: -0.015em;
-}
-.post-related-sub {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.post-related-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-.related-item-card {
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
-  text-decoration: none !important;
-  transition: transform 0.25s var(--ease-out), border-color 0.25s, box-shadow 0.25s;
-}
-.related-item-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--line-s);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-}
-.related-item-thumb-box {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #0f172a;
-  overflow: hidden;
-  position: relative;
-}
-.related-item-thumb {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-.related-item-card:hover .related-item-thumb {
-  transform: scale(1.03);
-}
-.related-item-content {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-.related-item-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-  font-family: var(--mono);
-  font-size: 11px;
-}
-.related-item-badge {
-  color: #0284c7;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-.related-item-title {
-  font-family: var(--sans);
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.45;
-  color: var(--ink);
-  margin-bottom: 8px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.related-item-desc {
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: var(--ink-2);
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.related-item-link-text {
-  margin-top: auto;
-  padding-top: 14px;
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 600;
-  color: #0284c7;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-@media (max-width: 640px) {
-  .post-related-grid {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 768px) {
+  .post-wrap { padding: 40px 20px 80px; }
+  .post-cta-box { flex-direction: column; align-items: flex-start; padding: 28px 24px; }
 }
 </style>
 
@@ -360,41 +236,6 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
   <div class="post-body">
     <Content />
   </div>
-
-  <!-- 연관 실전 자료실 글 추천 -->
-  {relatedLabList.length > 0 && (
-    <section class="post-related-section">
-      <div class="post-related-header">
-        <h3 class="post-related-title">함께 보면 좋은 실전 자료실 & 코드</h3>
-        <span class="post-related-sub">LAB RESOURCES</span>
-      </div>
-
-      <div class="post-related-grid">
-        {relatedLabList.map(item => (
-          <a href={`/lab/${item.id}/`} class="related-item-card">
-            <div class="related-item-thumb-box">
-              <img 
-                src={item.data.thumbnail || "/images/lab/thumb-01-blog-volume.png"} 
-                alt={item.data.title} 
-                class="related-item-thumb" 
-                loading="lazy" 
-              />
-            </div>
-            <div class="related-item-content">
-              <div class="related-item-meta">
-                <span class="related-item-badge">{item.data.categoryBadge || 'TWONELAB'}</span>
-                <span style="color:var(--muted);">·</span>
-                <span style="color:var(--muted);">{item.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-              </div>
-              <h4 class="related-item-title">{item.data.title}</h4>
-              <p class="related-item-desc">{item.data.summary}</p>
-              <div class="related-item-link-text">파이썬 코드 & 노하우 확인 →</div>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
-  )}
 
   <!-- End of Post CTA Box -->
   <div class="post-cta-box">

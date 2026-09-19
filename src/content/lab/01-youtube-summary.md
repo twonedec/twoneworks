@@ -5,7 +5,7 @@ date: 2026-09-15
 categoryBadge: "AI PROMPT"
 thumbnail: "/images/lab/thumb-01-youtube-summary.png"
 tags: ["유튜브요약", "제미나이", "프롬프트", "AI활용"]
-draft: true
+draft: false
 ---
 
 유튜브에서 유익한 강의나 테크 리뷰 영상을 보다 보면, **"내용은 좋은데 30분을 다 볼 시간이 없다"**는 생각이 들 때가 많습니다.

@@ -13,20 +13,9 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 
-// 연관 콘텐츠 추천 (작업기 및 다른 자료실 글)
+// 쇼츠/외부 링크 유입자를 위한 블로그 작업기 추천 (다른 자료실 글은 내부에서 비노출)
 const allPosts = await getCollection('posts', ({ data }) => !data.draft);
-const allLab = await getCollection('lab', ({ data }) => !data.draft && data.title !== post.data.title);
-
-// 블로그 키워드 관련 자료실 글이면 키워드 추출기 작업기를 최우선 노출
-const isBlogTopic = post.id.includes('blog') || (post.data.tags && post.data.tags.some(t => t.includes('블로그') || t.includes('키워드')));
-const relatedPostItem = isBlogTopic ? allPosts.find(p => p.id.includes('keyword-extractor')) : allPosts[0];
-
-// 다른 자료실 글 중 2개 추천
-const otherLabItems = allLab.filter(item => isBlogTopic ? item.id.includes('blog') : !item.id.includes('blog')).slice(0, 2);
-if (otherLabItems.length < 2) {
-  const remaining = allLab.filter(item => !otherLabItems.includes(item)).slice(0, 2 - otherLabItems.length);
-  otherLabItems.push(...remaining);
-}
+const relatedPostItem = allPosts.find(p => p.id.includes('keyword-extractor')) || allPosts[0];
 
 const isStockPost = post.id.includes('stock') || (post.data.tags && post.data.tags.some(t => t.includes('주식') || t.includes('퀀트')));
 
@@ -264,101 +253,90 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.lab-related-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-.related-item-card {
+.related-single-card {
   display: flex;
-  flex-direction: column;
+  gap: 24px;
+  align-items: center;
   background: var(--bg-elev);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
+  border-radius: 14px;
+  padding: 22px 26px;
   text-decoration: none !important;
   transition: transform 0.25s var(--ease-out), border-color 0.25s, box-shadow 0.25s;
 }
-.related-item-card:hover {
-  transform: translateY(-4px);
+.related-single-card:hover {
+  transform: translateY(-3px);
   border-color: var(--line-s);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
-.related-item-thumb-box {
-  width: 100%;
+.related-single-thumb-box {
+  width: 220px;
+  min-width: 220px;
   aspect-ratio: 16 / 9;
-  background: #0f172a;
+  border-radius: 8px;
   overflow: hidden;
-  position: relative;
+  background: #0f172a;
 }
-.related-item-thumb {
+.related-single-thumb {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
-.related-item-card:hover .related-item-thumb {
-  transform: scale(1.03);
+.related-single-card:hover .related-single-thumb {
+  transform: scale(1.04);
 }
-.related-item-content {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
+.related-single-content {
   flex: 1;
+  min-width: 0;
 }
-.related-item-meta {
+.related-single-meta {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 11.5px;
 }
-.related-item-badge {
-  color: #0284c7;
+.related-single-badge {
+  color: #10b981;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
-.related-item-badge.note {
-  color: #10b981;
-}
-.related-item-title {
+.related-single-title {
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
-  line-height: 1.45;
+  line-height: 1.4;
   color: var(--ink);
   margin-bottom: 8px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
-.related-item-desc {
-  font-size: 13.5px;
+.related-single-desc {
+  font-size: 14px;
   line-height: 1.6;
   color: var(--ink-2);
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  margin: 0 0 12px;
 }
-.related-item-link-text {
-  margin-top: auto;
-  padding-top: 14px;
+.related-single-link {
   font-family: var(--mono);
   font-size: 12px;
   font-weight: 600;
   color: #0284c7;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
-@media (max-width: 640px) {
-  .lab-related-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 680px) {
+  .related-single-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 20px;
+  }
+  .related-single-thumb-box {
+    width: 100%;
+    min-width: 100%;
   }
 }
 </style>
@@ -387,61 +365,39 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
     <Content />
   </article>
 
-  <!-- 연관 작업기 및 추천 자료 카드 섹션 -->
-  <section class="lab-related-section">
-    <div class="lab-related-header">
-      <h3 class="lab-related-title">함께 읽어볼 만한 실전 기록 & 도구</h3>
-      <span class="lab-related-sub">RELATED NOTES & TOOLS</span>
-    </div>
+  <!-- 블로그 실전 작업기 추천 (쇼츠 유입자 전환 동선) -->
+  {relatedPostItem && (
+    <section class="lab-related-section">
+      <div class="lab-related-header">
+        <h3 class="lab-related-title">도구 제작 과정 & 실전 작업기</h3>
+        <span class="lab-related-sub">TWONEWORKS NOTE</span>
+      </div>
 
-    <div class="lab-related-grid">
-      {relatedPostItem && (
-        <a href={`/posts/${relatedPostItem.id}/`} class="related-item-card">
-          <div class="related-item-thumb-box">
-            <img 
-              src={relatedPostItem.data.thumbnail || "/images/lab/thumb-post-01-keyword-extractor.png"} 
-              alt={relatedPostItem.data.title} 
-              class="related-item-thumb" 
-              loading="lazy" 
-            />
+      <a href={`/posts/${relatedPostItem.id}/`} class="related-single-card">
+        <div class="related-single-thumb-box">
+          <img 
+            src={relatedPostItem.data.thumbnail || "/images/lab/thumb-post-01-keyword-extractor.png"} 
+            alt={relatedPostItem.data.title} 
+            class="related-single-thumb" 
+            loading="lazy" 
+          />
+        </div>
+        <div class="related-single-content">
+          <div class="related-single-meta">
+            <span class="related-single-badge">작업 기록 · NOTE</span>
+            <span style="color:var(--muted);">·</span>
+            <span style="color:var(--muted);">{relatedPostItem.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
           </div>
-          <div class="related-item-content">
-            <div class="related-item-meta">
-              <span class="related-item-badge note">작업 기록 · NOTE</span>
-              <span style="color:var(--muted);">·</span>
-              <span style="color:var(--muted);">{relatedPostItem.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-            </div>
-            <h4 class="related-item-title">{relatedPostItem.data.title}</h4>
-            <p class="related-item-desc">{relatedPostItem.data.summary}</p>
-            <div class="related-item-link-text">제작 과정 & 영상 보기 →</div>
+          <h4 class="related-single-title">{relatedPostItem.data.title}</h4>
+          <p class="related-single-desc">{relatedPostItem.data.summary}</p>
+          <div class="related-single-link">
+            <span>제작 과정 & 실제 구동 영상 확인하기</span>
+            <span style="font-size:14px;">→</span>
           </div>
-        </a>
-      )}
-
-      {otherLabItems.map(item => (
-        <a href={`/lab/${item.id}/`} class="related-item-card">
-          <div class="related-item-thumb-box">
-            <img 
-              src={item.data.thumbnail || "/images/lab/thumb-01-blog-volume.png"} 
-              alt={item.data.title} 
-              class="related-item-thumb" 
-              loading="lazy" 
-            />
-          </div>
-          <div class="related-item-content">
-            <div class="related-item-meta">
-              <span class="related-item-badge">{item.data.categoryBadge || 'TWONELAB'}</span>
-              <span style="color:var(--muted);">·</span>
-              <span style="color:var(--muted);">{item.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-            </div>
-            <h4 class="related-item-title">{item.data.title}</h4>
-            <p class="related-item-desc">{item.data.summary}</p>
-            <div class="related-item-link-text">파이썬 코드 & 노하우 확인 →</div>
-          </div>
-        </a>
-      ))}
-    </div>
-  </section>
+        </div>
+      </a>
+    </section>
+  )}
 
   <!-- 크몽 솔루션 배너 -->
   <div class="kmong-cta-box">
