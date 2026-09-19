@@ -65,6 +65,11 @@ draft: false
 
 이런 키워드들이 한눈에 띄도록 `openpyxl` 라이브러리를 통해 엑셀 셀에 자동으로 하이라이트를 적용했습니다.
 
+<div class="article-media-box">
+  <img src="/images/keyword-process-dual.png" alt="씨앗 키워드 자동 확장 트리와 실전 엑셀 리포트 자동 생성 프로세스" class="article-img" />
+  <p class="article-media-caption">▲ 좌: 단어 하나로 연관 롱테일을 파생하는 확장 트리 / 우: 포화도와 서식이 자동 계산된 엑셀 리포트</p>
+</div>
+
 ---
 
 ## 직접 써보며 달라진 점 (실제 동작 영상)
