@@ -1,0 +1,113 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Layout title="기록 — Twoneworks" description="직접 만들고 다루며 검증한 1인 개발자의 실전 개발기와 작업 기록들">
+<style>
+.list-wrap {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 80px 24px 120px;
+}
+.list-head {
+  margin-bottom: 56px;
+}
+.list-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.list-title {
+  font-family: var(--sans);
+  font-size: clamp(32px, 4.5vw, 44px);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.list-desc {
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.post-item {
+  display: block;
+  padding: 32px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  text-decoration: none !important;
+  margin-bottom: 20px;
+  transition: transform .25s var(--ease-out), border-color .25s;
+}
+.post-item:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-s);
+}
+.post-item-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+.post-item-cat {
+  color: #0284c7;
+  font-weight: 600;
+  letter-spacing: .06em;
+}
+.post-item-date {
+  color: var(--muted);
+}
+.post-item-title {
+  font-family: var(--sans);
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.02em;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+.post-item-summary {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ink-2);
+  margin: 0;
+}
+</style>
+
+<div class="list-wrap">
+  <div class="list-head">
+    <p class="list-eyebrow">DEVELOPER NOTES · 작업 기록</p>
+    <h1 class="list-title">만들며 남긴 기록들</h1>
+    <p class="list-desc">
+      문제를 발견하고, 코드로 직접 해결하고, 실전에서 검증하며 기록한 1인 개발자의 이야기입니다.
+    </p>
+  </div>
+
+  <div class="posts-list">
+    {posts.map(post => (
+      <a href={`/posts/${post.id}/`} class="post-item">
+        <div class="post-item-top">
+          <span class="post-item-cat">{post.data.category}</span>
+          <time class="post-item-date">
+            {post.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
+          </time>
+        </div>
+        <h2 class="post-item-title">{post.data.title}</h2>
+        <p class="post-item-summary">{post.data.summary}</p>
+      </a>
+    ))}
+  </div>
+</div>
+</Layout>
