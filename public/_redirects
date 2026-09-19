@@ -1,1 +1,10 @@
 /sitemap.xml /sitemap-index.xml 301
+
+# 단축 URL 리다이렉트 (쇼츠/유튜브 설명란 & 댓글용)
+/lab/01 /lab/01-blog-keyword-volume/ 301
+/lab/02 /lab/02-blog-keyword-recency/ 301
+/lab/03 /lab/03-blog-adpost-highcpc/ 301
+/lab/stock /lab/01-stock-quant-garp/ 301
+/lab/youtube /lab/01-youtube-summary/ 301
+/lab /posts/ 302
+/kmong /posts/ 302

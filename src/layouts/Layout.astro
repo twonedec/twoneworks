@@ -17,6 +17,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = ogImage
   ? new URL(ogImage, Astro.site).href
   : new URL('/thumbnail.png', Astro.site).href;
+
+// Web Analytics 설정 (환경 변수 또는 직접 입력)
+const GA_ID = import.meta.env.PUBLIC_GA_ID || '';
+const CF_BEACON_TOKEN = import.meta.env.PUBLIC_CF_BEACON_TOKEN || '';
 ---
 
 <!doctype html>
@@ -43,6 +47,29 @@ const ogImageURL = ogImage
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet" />
+
+  {/* Google Analytics 4 (GA4) */}
+  {GA_ID && (
+    <>
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+      <script is:inline define:vars={{ GA_ID }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', GA_ID, {
+          page_path: window.location.pathname + window.location.search,
+          send_page_view: true
+        });
+      </script>
+    </>
+  )}
+
+  {/* Cloudflare Web Analytics */}
+  {CF_BEACON_TOKEN && (
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon={`{"token": "${CF_BEACON_TOKEN}"}`}></script>
+  )}
+
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -183,6 +210,52 @@ const ogImageURL = ogImage
         });
       });
     }
+
+    /* ── Web Analytics Event Tracking (Kmong Click & Copy Prompt) ── */
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. 크몽 아웃바운드 링크 클릭 추적
+      document.querySelectorAll('a[href*="kmong.com"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const targetUrl = link.getAttribute('href');
+          const currentPath = window.location.pathname;
+          
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', 'click_kmong', {
+              event_category: 'outbound',
+              event_label: targetUrl,
+              source_page: currentPath,
+              value: 1
+            });
+          }
+          // 로컬 스토리지에 백업 로그
+          try {
+            const logs = JSON.parse(localStorage.getItem('twone_clicks') || '[]');
+            logs.push({ time: new Date().toISOString(), type: 'kmong_click', url: targetUrl, page: currentPath });
+            localStorage.setItem('twone_clicks', JSON.stringify(logs.slice(-50)));
+          } catch (e) {}
+        });
+      });
+
+      // 2. 프롬프트 복사 버튼 클릭 추적
+      document.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target && (target.classList.contains('lab-copy-btn') || target.closest('.lab-copy-btn'))) {
+          const currentPath = window.location.pathname;
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', 'copy_prompt', {
+              event_category: 'engagement',
+              event_label: currentPath,
+              source_page: currentPath
+            });
+          }
+          try {
+            const logs = JSON.parse(localStorage.getItem('twone_clicks') || '[]');
+            logs.push({ time: new Date().toISOString(), type: 'copy_prompt', page: currentPath });
+            localStorage.setItem('twone_clicks', JSON.stringify(logs.slice(-50)));
+          } catch (e) {}
+        }
+      });
+    });
   </script>
 
 </body>
