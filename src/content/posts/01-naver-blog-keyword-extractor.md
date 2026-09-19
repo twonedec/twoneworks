@@ -31,8 +31,8 @@ draft: false
 개발자로서 이 비효율을 그냥 두고 보기 어려웠습니다. 코드로 자동화해서 몇 초 만에 정리해 두기로 했습니다.
 
 <div class="article-media-box">
-  <img src="/images/naver-search-capture.png" alt="네이버 블로그 롱테일 키워드 상위 노출 실제 사례" class="article-img" />
-  <p class="article-media-caption">▲ 대형 키워드 대신 '실속 있는 롱테일 세부 키워드'를 발굴했을 때 검색 1위에 안착한 실제 사례</p>
+  <img src="/images/keyword-comparison.jpg" alt="과포화 레드오션 키워드 vs 특급 빈집 롱테일 키워드 비교 분석" class="article-img" />
+  <p class="article-media-caption">▲ 검색량만 많은 과포화 키워드(포화도 40.6) vs 검색량은 나오면서 문서수가 적은 알짜 빈집 키워드(포화도 0.17)의 차이</p>
 </div>
 
 ---
