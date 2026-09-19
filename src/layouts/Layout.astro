@@ -211,14 +211,38 @@ const CF_BEACON_TOKEN = import.meta.env.PUBLIC_CF_BEACON_TOKEN || '';
       });
     }
 
-    /* ── Web Analytics Event Tracking (Kmong Click & Copy Prompt) ── */
+    /* ── Web Analytics Event Tracking (Self-hosted Oracle & Outbound Clicks) ── */
+    function twoneTrack(eventType, extraData = {}) {
+      try {
+        const payload = JSON.stringify({
+          event: eventType,
+          path: window.location.pathname,
+          referrer: document.referrer || '',
+          utm_source: new URLSearchParams(window.location.search).get('utm_source') || '',
+          utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || '',
+          ...extraData
+        });
+        const endpoint = 'https://blog.twoneworks.com/api/track';
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(endpoint, new Blob([payload], { type: 'application/json' }));
+        } else {
+          fetch(endpoint, { method: 'POST', body: payload, keepalive: true, headers: { 'Content-Type': 'application/json' } });
+        }
+      } catch (e) {}
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+      // 0. 페이지뷰 자체 오라클 서버 로깅
+      twoneTrack('pageview');
+
       // 1. 크몽 아웃바운드 링크 클릭 추적
       document.querySelectorAll('a[href*="kmong.com"]').forEach(link => {
         link.addEventListener('click', (e) => {
           const targetUrl = link.getAttribute('href');
           const currentPath = window.location.pathname;
           
+          twoneTrack('click_kmong', { referrer: targetUrl });
+
           if (typeof window.gtag === 'function') {
             window.gtag('event', 'click_kmong', {
               event_category: 'outbound',
@@ -227,7 +251,6 @@ const CF_BEACON_TOKEN = import.meta.env.PUBLIC_CF_BEACON_TOKEN || '';
               value: 1
             });
           }
-          // 로컬 스토리지에 백업 로그
           try {
             const logs = JSON.parse(localStorage.getItem('twone_clicks') || '[]');
             logs.push({ time: new Date().toISOString(), type: 'kmong_click', url: targetUrl, page: currentPath });
@@ -241,6 +264,9 @@ const CF_BEACON_TOKEN = import.meta.env.PUBLIC_CF_BEACON_TOKEN || '';
         const target = e.target;
         if (target && (target.classList.contains('lab-copy-btn') || target.closest('.lab-copy-btn'))) {
           const currentPath = window.location.pathname;
+          
+          twoneTrack('copy_prompt');
+
           if (typeof window.gtag === 'function') {
             window.gtag('event', 'copy_prompt', {
               event_category: 'engagement',
