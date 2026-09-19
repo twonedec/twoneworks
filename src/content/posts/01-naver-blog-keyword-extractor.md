@@ -65,11 +65,6 @@ draft: false
 
 이런 키워드들이 한눈에 띄도록 `openpyxl` 라이브러리를 통해 엑셀 셀에 자동으로 하이라이트를 적용했습니다.
 
-<div class="article-media-box">
-  <img src="/images/excel-result.jpg" alt="파이썬으로 자동 생성된 엑셀 키워드 분석 리포트" class="article-img" />
-  <p class="article-media-caption">▲ 시드 키워드 입력 후 자동으로 생성된 엑셀 리포트: 총검색량, 총문서수, 경쟁포화도가 한눈에 정렬된다</p>
-</div>
-
 ---
 
 ## 직접 써보며 달라진 점 (실제 동작 영상)
