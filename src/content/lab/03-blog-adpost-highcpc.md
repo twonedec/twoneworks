@@ -5,7 +5,7 @@ date: 2026-09-17
 categoryBadge: "BLOG KEYWORD"
 thumbnail: "/images/lab/thumb-03-blog-cpc.png"
 tags: ["네이버블로그", "애드포스트", "고단가키워드", "블로그수익", "파이썬자동화"]
-draft: false
+draft: true
 ---
 
 열심히 글을 써서 매일 방문자 1,000명을 겨우 달성했는데...  

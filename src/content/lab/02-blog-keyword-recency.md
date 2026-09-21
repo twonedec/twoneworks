@@ -5,7 +5,7 @@ date: 2026-09-17
 categoryBadge: "BLOG KEYWORD"
 thumbnail: "/images/lab/thumb-02-blog-recency.png"
 tags: ["네이버블로그", "황금키워드", "최신글경과일", "블로그상위노출", "파이썬자동화"]
-draft: false
+draft: true
 ---
 
 지난 1편에서 공개한 **'검색량 대비 총문서수(경쟁 포화도 0.8 이하)'** 공식을 보고 많은 분들이 빈집 키워드를 찾기 시작하셨습니다.  
