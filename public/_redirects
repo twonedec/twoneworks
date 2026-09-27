@@ -3,7 +3,4 @@
 # 단축 URL 리다이렉트 (쇼츠 1호 전용 - 2, 3호는 영상 릴리즈 시 활성화)
 /1 /lab/01-blog-keyword-volume/ 301
 /lab/01 /lab/01-blog-keyword-volume/ 301
-/lab/stock /lab/01-stock-quant-garp/ 301
-/lab/youtube /lab/01-youtube-summary/ 301
-/lab /posts/ 302
 /kmong /posts/ 302
