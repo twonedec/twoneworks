@@ -5,7 +5,7 @@ date: 2026-09-17
 categoryBadge: "QUANT STOCK"
 thumbnail: "/images/lab/thumb-01-stock-garp.png"
 tags: ["피터린치", "퀀트투자", "GARP", "PEG공식", "파이썬주식", "저평가성장주"]
-draft: false
+draft: true
 ---
 
 월가의 전설적인 펀드매니저 피터 린치는 13년 동안 마젤란 펀드를 운용하며 **연평균 29.2%라는 경이로운 수익률**을 기록했습니다.  
