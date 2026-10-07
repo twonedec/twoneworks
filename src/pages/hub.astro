@@ -477,8 +477,8 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
 
   </div>
 
-  <!-- 카카오 공식 JavaScript SDK 로드 -->
-  <script is:inline src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2mFxE6YZnGotaGeIh1zsKBWY305tN9kyyb560Bu5bqQ" crossorigin="anonymous"></script>
+  <!-- 카카오 공식 JavaScript SDK 로드 (head slot) -->
+  <script is:inline slot="head" src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"></script>
 
   <script is:inline>
     const KAKAO_JS_KEY = '1d2f15dc312e9ce6949427e8c805448b';
