@@ -14,6 +14,8 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
 >
   <!-- 검색엔진 차단: 구글, 네이버 등 서치콘솔 색인 원천 배제 -->
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" slot="head" />
+  <!-- 카카오 공식 JavaScript SDK 로드 -->
+  <script is:inline slot="head" src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"></script>
 
   <style>
     .hub-wrap {
@@ -477,16 +479,15 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
 
   </div>
 
-  <!-- 카카오 공식 JavaScript SDK 로드 (head slot) -->
-  <script is:inline slot="head" src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"></script>
-
   <script is:inline>
     const KAKAO_JS_KEY = '1d2f15dc312e9ce6949427e8c805448b';
 
-    // 카카오 SDK 초기화
-    if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init(KAKAO_JS_KEY);
+    function initKakaoSDK() {
+      if (window.Kakao && !window.Kakao.isInitialized()) {
+        window.Kakao.init(KAKAO_JS_KEY);
+      }
     }
+    initKakaoSDK();
 
     const kakaoBtn = document.getElementById('kakaoBtn');
     const kwForm = document.getElementById('kwForm');
@@ -498,8 +499,29 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
 
     // 카카오 1초 간편 인증 실행
     kakaoBtn?.addEventListener('click', () => {
+      initKakaoSDK();
+
       if (!window.Kakao) {
-        alert('카카오 SDK 로딩 중입니다. 잠시 후 다시 시도해 주세요.');
+        // 혹시 비동기 로딩이 지연되었을 경우 즉시 동적 주입 및 재시도
+        const script = document.createElement('script');
+        script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js';
+        script.onload = () => {
+          initKakaoSDK();
+          triggerKakaoLogin();
+        };
+        script.onerror = () => {
+          alert('카카오 스크립트 로드에 실패했습니다. 네트워크 상태나 광고 차단(애드블록)을 확인해 주세요.');
+        };
+        document.head.appendChild(script);
+        return;
+      }
+
+      triggerKakaoLogin();
+    });
+
+    function triggerKakaoLogin() {
+      if (!window.Kakao || !window.Kakao.Auth) {
+        alert('카카오 인증 모듈 준비 중입니다. 잠시 후 다시 눌러주세요.');
         return;
       }
 
@@ -528,7 +550,7 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
           alert('카카오 인증이 취소되었거나 오류가 발생했습니다.');
         }
       });
-    });
+    }
 
     // 엑셀 발굴 요청 (실서버 연동)
     startBtn?.addEventListener('click', async () => {
