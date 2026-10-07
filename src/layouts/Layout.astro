@@ -5,12 +5,14 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  noindex?: boolean;
 }
 
 const {
   title,
   description = "Twoneworks — 필요한 도구를 직접 만드는 개인 작업실",
   ogImage,
+  noindex = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -32,6 +34,8 @@ const CF_BEACON_TOKEN = import.meta.env.PUBLIC_CF_BEACON_TOKEN || '';
   <meta name="generator" content={Astro.generator} />
   <title>{title}</title>
   <meta name="description" content={description} />
+  {noindex && <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />}
+  <slot name="head" />
   <link rel="canonical" href={canonicalURL} />
   <meta property="og:title"       content={title} />
   <meta property="og:description" content={description} />

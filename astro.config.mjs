@@ -5,7 +5,11 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://twoneworks.com',
   trailingSlash: 'always',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) => !page.includes('/hub'),
+    }),
+  ],
   redirects: {
     '/1': '/lab/01-blog-keyword-volume/',
     '/lab/01': '/lab/01-blog-keyword-volume/',

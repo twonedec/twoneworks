@@ -1,0 +1,551 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+// draft: false인 공개 자료실 글만 최신 날짜순으로 자동 수집
+const allLabPosts = await getCollection('lab', ({ data }) => !data.draft);
+const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Layout 
+  title="Resource Hub — Twoneworks" 
+  description="인스타그램 방문자 전용 시크릿 리소스 허브. 실전 키워드 1회 무료 발굴과 릴스 연계 공식 분석 자료."
+  noindex={true}
+>
+  <!-- 검색엔진 차단: 구글, 네이버 등 서치콘솔 색인 원천 배제 -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" slot="head" />
+
+  <style>
+    .hub-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 40px 20px 96px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* 1. 상단 인트로 */
+    .hub-intro {
+      text-align: left;
+    }
+    .eyebrow {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .page-title {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+    .page-desc {
+      font-size: 14px;
+      color: var(--ink-2);
+      line-height: 1.6;
+    }
+
+    /* 2. 핵심 섹션: 1회 무료 발굴권 카드 */
+    .card-benefit {
+      background: var(--bg-elev);
+      border: 1px solid var(--line-s);
+      border-radius: 16px;
+      padding: 26px 24px 22px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      position: relative;
+    }
+
+    /* 일 선착순 30명 한정 배지 */
+    .limit-badge-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .limit-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 6px;
+    }
+    .limit-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+    .limit-note {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .limit-warning {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .benefit-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .benefit-text {
+      font-size: 13.5px;
+      color: var(--ink-2);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* 카카오 로그인 버튼 */
+    .btn-kakao {
+      width: 100%;
+      background: var(--kakao);
+      color: var(--kakao-ink);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 13px 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-kakao:hover {
+      background: #fada0a;
+      transform: translateY(-1px);
+    }
+    .btn-kakao svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* 로그인 완료 후 노출 폼 */
+    .form-unlocked {
+      display: none;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+    .auth-status-badge {
+      font-size: 12px;
+      color: #16a34a;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .kw-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--line-s);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
+      font-family: inherit;
+    }
+    .kw-input:focus {
+      border-color: var(--ink);
+      background: #fff;
+    }
+    .btn-search {
+      background: var(--ink);
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 0 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .btn-search:hover {
+      opacity: 0.9;
+    }
+
+    /* 진행 상태 표시 */
+    .loading-box {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg-soft);
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--ink-2);
+      font-weight: 600;
+    }
+
+    /* 개인정보 안심 보장 안내 박스 */
+    .privacy-notice {
+      margin-top: 14px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .privacy-notice strong {
+      color: var(--ink-2);
+      font-weight: 700;
+    }
+
+    /* 기능 3대 요약 */
+    .feature-tags {
+      margin-top: 16px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .ftag {
+      font-size: 11.5px;
+      color: var(--ink-2);
+      background: var(--bg-soft);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+    }
+
+    /* 3. 자연스러운 정품 솔루션 브릿지 카드 */
+    .card-solution {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 20px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.15s;
+    }
+    .card-solution:hover {
+      border-color: var(--ink);
+      transform: translateY(-1px);
+    }
+    .sol-content {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .sol-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .sol-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .sol-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .sol-arrow {
+      font-size: 13px;
+      color: var(--ink);
+      font-weight: 700;
+      white-space: nowrap;
+      border: 1px solid var(--line-s);
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: var(--bg);
+    }
+
+    /* 4. 연구소 공식 기술 자료실 (자동 최신 글 수집 피드) */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: 8px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .section-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .lab-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .feed-item {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .feed-item:hover {
+      border-color: var(--line-s);
+      background: var(--bg-soft);
+    }
+    .item-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .item-badge {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+    }
+    .item-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    .item-summary {
+      font-size: 12.5px;
+      color: var(--ink-2);
+      line-height: 1.5;
+    }
+
+    /* 푸터 */
+    .site-footer {
+      text-align: center;
+      padding-top: 24px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+  </style>
+
+  <div class="hub-wrap">
+
+    <!-- 인트로 -->
+    <section class="hub-intro">
+      <p class="eyebrow">INSTAGRAM EXCLUSIVE</p>
+      <h1 class="page-title">작업실 시크릿 리소스 허브</h1>
+      <p class="page-desc">
+        인스타그램을 통해 찾아오신 분들을 위한 전용 리소스 공간입니다.<br>
+        실전 키워드 무료 발굴과 릴스 연계 공식 분석 자료를 확인하세요.
+      </p>
+    </section>
+
+    <!-- 1. 핵심: 1회 무료 발굴권 카드 -->
+    <section class="card-benefit">
+      <div class="limit-badge-row">
+        <span class="limit-badge">일 선착순 30명 한정</span>
+        <span class="limit-note">매일 자정 리셋 · 1인 1회 무료</span>
+      </div>
+      <div class="limit-warning">
+        ※ 인스타그램 릴스 게시 기간 동안만 한시적으로 제공되며, 영상이 내려가면 무료 혜택도 예고 없이 종료됩니다.
+      </div>
+
+      <h2 class="benefit-title">블로그 황금키워드 1회 무료 발굴</h2>
+      <p class="benefit-text">
+        궁금하신 내 블로그 주제 키워드 1개를 입력하시면, 포털 실데이터를 조회하여 
+        <b>'포화도 0.3 이하 S급 빈집 키워드 + 2개 시트 맞춤 엑셀 + AI 추천 제목·목차'</b>를 
+        15초 만에 무료로 추출해 드립니다.
+      </p>
+
+      <!-- 카카오 로그인 버튼 -->
+      <button class="btn-kakao" id="kakaoBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3C6.477 3 2 6.477 2 10.767c0 2.784 1.884 5.228 4.708 6.551-.205.748-.744 2.709-.854 3.136-.135.534.195.526.41.383.17-.113 2.685-1.824 3.738-2.544.64.093 1.306.141 1.998.141 5.523 0 10-3.477 10-7.767S17.523 3 12 3z"/>
+        </svg>
+        카카오로 1초 인증하고 무료 1회 발굴하기
+      </button>
+
+      <!-- 로그인 완료 후 노출 폼 -->
+      <div class="form-unlocked" id="kwForm">
+        <div class="auth-status-badge">
+          ✓ 인증 완료 · 1회 무료 발굴권이 활성화되었습니다
+        </div>
+        <div class="input-row">
+          <input type="text" class="kw-input" id="seedInput" placeholder="키워드 1개 입력 (예: 제주도 카페, 육아휴직 급여)">
+          <button class="btn-search" id="startBtn" type="button">엑셀 발굴</button>
+        </div>
+        <p style="font-size:11.5px; color:var(--muted); margin-top:4px;">
+          * 클릭 즉시 포털 실데이터를 전수 조사하여 엑셀 리포트(.xlsx)가 다운로드됩니다.
+        </p>
+        <div class="loading-box" id="loadingBox">
+          ⏳ 포털 실데이터 전수 분석 중입니다 (약 15초 소요)...
+        </div>
+      </div>
+
+      <!-- 개인정보 안심 보장 안내 -->
+      <div class="privacy-notice">
+        <strong>🔒 개인정보 안심 보장 안내</strong><br>
+        카카오 로그인은 무분별한 봇 매크로를 차단하고 <b>1인 1회 발급 여부만 확인</b>하는 용도로 사용됩니다. 
+        이름, 전화번호 등의 개인정보는 일체 수집하거나 저장하지 않으며, 광고 카톡도 절대 발송되지 않습니다.
+      </div>
+
+      <div class="feature-tags">
+        <span class="ftag">✓ 14개 자음(ㄱ~ㅎ) 전수 발굴</span>
+        <span class="ftag">✓ 2개 시트 맞춤 분할</span>
+        <span class="ftag">✓ AI 제목 2종 & 3단 목차</span>
+      </div>
+    </section>
+
+    <!-- 2. 자연스러운 정품 솔루션 브릿지 안내 -->
+    <a href="https://kmong.com/gig/785584" target="_blank" rel="noopener noreferrer" class="card-solution">
+      <div class="sol-content">
+        <span class="sol-label">OFFICIAL SOLUTION</span>
+        <div class="sol-title">원하는 기간 동안 매일 무제한으로 발굴하고 싶다면?</div>
+        <div class="sol-desc">1·3·6개월 기간 선택 · 15초 초고속 추출 정품 솔루션 알아보기</div>
+      </div>
+      <div class="sol-arrow">자세히 보기 ↗</div>
+    </a>
+
+    <!-- 3. 연구소 공식 기술 자료실 (자동 최신 순 글 모음) -->
+    <section>
+      <div class="section-head">
+        <h2 class="section-title">Lab Resources</h2>
+        <span class="section-sub">릴스 연계 공식 분석 자료</span>
+      </div>
+
+      <div class="lab-feed">
+        {sortedLabPosts.map((p) => (
+          <a href={`/lab/${p.id}/`} class="feed-item">
+            <div class="item-meta">
+              <span class="item-badge">{p.data.categoryBadge || 'LAB'}</span>
+              <span>{p.data.tags?.[0] || '공식 자료'}</span>
+            </div>
+            <div class="item-title">{p.data.title}</div>
+            <div class="item-summary">{p.data.summary}</div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="site-footer">
+      © Twoneworks. 필요한 도구를 직접 만드는 개인 작업실.<br>
+      본 페이지는 인스타그램 방문자 전용 비공개 페이지입니다.
+    </footer>
+
+  </div>
+
+  <script is:inline>
+    // 카카오 SDK 및 실서버 엑셀 생성 API 연동 로직
+    const kakaoBtn = document.getElementById('kakaoBtn');
+    const kwForm = document.getElementById('kwForm');
+    const startBtn = document.getElementById('startBtn');
+    const seedInput = document.getElementById('seedInput');
+    const loadingBox = document.getElementById('loadingBox');
+
+    // 1. 임시 토글 데모 (실제 카카오 로그인 연동 전 로컬 동작)
+    kakaoBtn?.addEventListener('click', () => {
+      kakaoBtn.style.display = 'none';
+      kwForm.style.display = 'block';
+    });
+
+    // 2. 엑셀 생성 요청 (실서버 https://blog.twoneworks.com/api/generate_excel 호출)
+    startBtn?.addEventListener('click', async () => {
+      const seed = seedInput?.value.trim();
+      if (!seed) {
+        alert('키워드를 입력해 주세요.');
+        return;
+      }
+
+      startBtn.disabled = true;
+      loadingBox.style.display = 'block';
+
+      try {
+        const fd = new FormData();
+        fd.append('seed', seed);
+        fd.append('code', ''); // 무료 체험 1회 호출
+        fd.append('count', '30');
+
+        const res = await fetch('https://blog.twoneworks.com/api/generate_excel', {
+          method: 'POST',
+          body: fd
+        });
+        const data = await res.json();
+
+        if (data.ok && data.task_id) {
+          // 비동기 작업 폴링
+          const checkTimer = setInterval(async () => {
+            const stRes = await fetch(`https://blog.twoneworks.com/api/task_status/${data.task_id}`);
+            const stData = await stRes.json();
+            if (stData.ok && stData.task) {
+              if (stData.task.status === 'done') {
+                clearInterval(checkTimer);
+                loadingBox.textContent = '✅ 분석 완료! 엑셀 다운로드를 시작합니다.';
+                window.location.href = `https://blog.twoneworks.com${stData.task.download_url}`;
+                setTimeout(() => {
+                  loadingBox.style.display = 'none';
+                  startBtn.disabled = false;
+                }, 3000);
+              } else if (stData.task.status === 'error') {
+                clearInterval(checkTimer);
+                alert('추출 중 오류: ' + (stData.task.msg || '다시 시도해 주세요.'));
+                loadingBox.style.display = 'none';
+                startBtn.disabled = false;
+              }
+            }
+          }, 2000);
+        } else {
+          alert(data.msg || '추출에 실패했습니다. (1회 무료 소진 등)');
+          loadingBox.style.display = 'none';
+          startBtn.disabled = false;
+        }
+      } catch (err) {
+        alert('서버 연결 중 오류가 발생했습니다.');
+        loadingBox.style.display = 'none';
+        startBtn.disabled = false;
+      }
+    });
+  </script>
+</Layout>

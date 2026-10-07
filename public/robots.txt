@@ -1,8 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /hub/
+Disallow: /hub
 
 Sitemap: https://twoneworks.com/sitemap-index.xml
 
 User-agent: Yeti
 Allow: /
+Disallow: /hub/
+Disallow: /hub
 
