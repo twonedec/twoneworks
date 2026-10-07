@@ -477,21 +477,60 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
 
   </div>
 
+  <!-- 카카오 공식 JavaScript SDK 로드 -->
+  <script is:inline src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2mFxE6YZnGotaGeIh1zsKBWY305tN9kyyb560Bu5bqQ" crossorigin="anonymous"></script>
+
   <script is:inline>
-    // 카카오 SDK 및 실서버 엑셀 생성 API 연동 로직
+    const KAKAO_JS_KEY = '1d2f15dc312e9ce6949427e8c805448b';
+
+    // 카카오 SDK 초기화
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init(KAKAO_JS_KEY);
+    }
+
     const kakaoBtn = document.getElementById('kakaoBtn');
     const kwForm = document.getElementById('kwForm');
     const startBtn = document.getElementById('startBtn');
     const seedInput = document.getElementById('seedInput');
     const loadingBox = document.getElementById('loadingBox');
 
-    // 1. 임시 토글 데모 (실제 카카오 로그인 연동 전 로컬 동작)
+    let currentKakaoUser = null;
+
+    // 카카오 1초 간편 인증 실행
     kakaoBtn?.addEventListener('click', () => {
-      kakaoBtn.style.display = 'none';
-      kwForm.style.display = 'block';
+      if (!window.Kakao) {
+        alert('카카오 SDK 로딩 중입니다. 잠시 후 다시 시도해 주세요.');
+        return;
+      }
+
+      window.Kakao.Auth.login({
+        success: function(authObj) {
+          // 사용자 고유 식별 번호 조회 (개인정보는 요청하지 않음)
+          window.Kakao.API.request({
+            url: '/v2/user/me',
+            success: function(res) {
+              currentKakaoUser = {
+                id: res.id, // 카카오 고유 불변 ID 식별자 (숫자)
+                token: authObj.access_token
+              };
+              // 인증 성공 -> 발굴 폼 오픈
+              kakaoBtn.style.display = 'none';
+              kwForm.style.display = 'block';
+            },
+            fail: function(err) {
+              console.error('카카오 회원 식별 실패:', err);
+              alert('인증 정보를 가져오지 못했습니다. 다시 시도해 주세요.');
+            }
+          });
+        },
+        fail: function(err) {
+          console.error('카카오 로그인 실패:', err);
+          alert('카카오 인증이 취소되었거나 오류가 발생했습니다.');
+        }
+      });
     });
 
-    // 2. 엑셀 생성 요청 (실서버 https://blog.twoneworks.com/api/generate_excel 호출)
+    // 엑셀 발굴 요청 (실서버 연동)
     startBtn?.addEventListener('click', async () => {
       const seed = seedInput?.value.trim();
       if (!seed) {
@@ -499,13 +538,22 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
         return;
       }
 
+      if (!currentKakaoUser || !currentKakaoUser.id) {
+        alert('카카오 인증 세션이 만료되었습니다. 다시 인증해 주세요.');
+        kakaoBtn.style.display = 'flex';
+        kwForm.style.display = 'none';
+        return;
+      }
+
       startBtn.disabled = true;
       loadingBox.style.display = 'block';
+      loadingBox.textContent = '⏳ 포털 실데이터 전수 분석 중입니다 (약 15초 소요)...';
 
       try {
         const fd = new FormData();
         fd.append('seed', seed);
-        fd.append('code', ''); // 무료 체험 1회 호출
+        fd.append('code', 'FREE_KAKAO_' + currentKakaoUser.id); // 1인 1회 카카오 식별 코드
+        fd.append('kakao_id', String(currentKakaoUser.id));
         fd.append('count', '30');
 
         const res = await fetch('https://blog.twoneworks.com/api/generate_excel', {
@@ -527,7 +575,7 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
                 setTimeout(() => {
                   loadingBox.style.display = 'none';
                   startBtn.disabled = false;
-                }, 3000);
+                }, 4000);
               } else if (stData.task.status === 'error') {
                 clearInterval(checkTimer);
                 alert('추출 중 오류: ' + (stData.task.msg || '다시 시도해 주세요.'));
@@ -537,7 +585,7 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
             }
           }, 2000);
         } else {
-          alert(data.msg || '추출에 실패했습니다. (1회 무료 소진 등)');
+          alert(data.msg || (data.detail ? data.detail[0]?.msg : '이미 1회 무료 발굴 혜택을 이용하셨거나 발급에 실패했습니다.'));
           loadingBox.style.display = 'none';
           startBtn.disabled = false;
         }
