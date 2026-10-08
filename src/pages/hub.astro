@@ -14,8 +14,8 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
 >
   <!-- 검색엔진 차단: 구글, 네이버 등 서치콘솔 색인 원천 배제 -->
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" slot="head" />
-  <!-- 카카오 공식 JavaScript SDK 로드 -->
-  <script is:inline slot="head" src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"></script>
+  <!-- 카카오 공식 JavaScript SDK 로드 (v1 안정화 버전: 팝업 Auth.login 및 API.request 완벽 지원) -->
+  <script is:inline slot="head" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 
   <style>
     .hub-wrap {
@@ -510,10 +510,8 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
         window.Kakao.init(KAKAO_JS_KEY);
       }
 
-      // 모바일/PC 모두 팝업 차단 없는 표준 카카오 로그인 실행
       try {
         window.Kakao.Auth.login({
-          throughTalk: true,
           success: function(authObj) {
             window.Kakao.API.request({
               url: '/v2/user/me',
@@ -531,18 +529,11 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
             });
           },
           fail: function(err) {
-            // 브라우저 팝업 차단 발생 시 자동 리다이렉트 방식으로 전환
-            if (err?.error === 'popup_blocked' || err?.error_description?.includes('popup')) {
-              window.Kakao.Auth.authorize({
-                redirectUri: 'https://twoneworks.com/hub/'
-              });
-            } else {
-              alert('카카오 인증 알림: ' + (err?.error_description || JSON.stringify(err)));
-            }
+            alert('카카오 인증 실패: ' + (err?.error_description || JSON.stringify(err)));
           }
         });
       } catch (e) {
-        alert('실행 중 예외 발생: ' + e.message);
+        alert('실행 중 오류: ' + e.message);
       }
     });
 
