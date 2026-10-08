@@ -502,55 +502,59 @@ const sortedLabPosts = allLabPosts.sort((a, b) => b.data.date.getTime() - a.data
       initKakaoSDK();
 
       if (!window.Kakao) {
-        // 혹시 비동기 로딩이 지연되었을 경우 즉시 동적 주입 및 재시도
-        const script = document.createElement('script');
-        script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js';
-        script.onload = () => {
-          initKakaoSDK();
-          triggerKakaoLogin();
-        };
-        script.onerror = () => {
-          alert('카카오 스크립트 로드에 실패했습니다. 네트워크 상태나 광고 차단(애드블록)을 확인해 주세요.');
-        };
-        document.head.appendChild(script);
+        alert('카카오 SDK 로딩 실패: 네트워크 또는 광고차단기(AdBlock)를 확인해 주세요.');
         return;
       }
 
-      triggerKakaoLogin();
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init(KAKAO_JS_KEY);
+      }
+
+      // 모바일/PC 모두 팝업 차단 없는 표준 카카오 로그인 실행
+      try {
+        window.Kakao.Auth.login({
+          throughTalk: true,
+          success: function(authObj) {
+            window.Kakao.API.request({
+              url: '/v2/user/me',
+              success: function(res) {
+                currentKakaoUser = {
+                  id: res.id,
+                  token: authObj.access_token
+                };
+                kakaoBtn.style.display = 'none';
+                kwForm.style.display = 'block';
+              },
+              fail: function(err) {
+                alert('카카오 회원 식별 오류: ' + JSON.stringify(err));
+              }
+            });
+          },
+          fail: function(err) {
+            // 브라우저 팝업 차단 발생 시 자동 리다이렉트 방식으로 전환
+            if (err?.error === 'popup_blocked' || err?.error_description?.includes('popup')) {
+              window.Kakao.Auth.authorize({
+                redirectUri: 'https://twoneworks.com/hub/'
+              });
+            } else {
+              alert('카카오 인증 알림: ' + (err?.error_description || JSON.stringify(err)));
+            }
+          }
+        });
+      } catch (e) {
+        alert('실행 중 예외 발생: ' + e.message);
+      }
     });
 
-    function triggerKakaoLogin() {
-      if (!window.Kakao || !window.Kakao.Auth) {
-        alert('카카오 인증 모듈 준비 중입니다. 잠시 후 다시 눌러주세요.');
-        return;
+    // 만약 리다이렉트 방식으로 인가 코드가 넘어왔을 경우 처리
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const authCode = urlParams.get('code');
+      if (authCode) {
+        kakaoBtn.style.display = 'none';
+        kwForm.style.display = 'block';
       }
-
-      window.Kakao.Auth.login({
-        success: function(authObj) {
-          // 사용자 고유 식별 번호 조회 (개인정보는 요청하지 않음)
-          window.Kakao.API.request({
-            url: '/v2/user/me',
-            success: function(res) {
-              currentKakaoUser = {
-                id: res.id, // 카카오 고유 불변 ID 식별자 (숫자)
-                token: authObj.access_token
-              };
-              // 인증 성공 -> 발굴 폼 오픈
-              kakaoBtn.style.display = 'none';
-              kwForm.style.display = 'block';
-            },
-            fail: function(err) {
-              console.error('카카오 회원 식별 실패:', err);
-              alert('인증 정보를 가져오지 못했습니다. 다시 시도해 주세요.');
-            }
-          });
-        },
-        fail: function(err) {
-          console.error('카카오 로그인 실패:', err);
-          alert('카카오 인증이 취소되었거나 오류가 발생했습니다.');
-        }
-      });
-    }
+    });
 
     // 엑셀 발굴 요청 (실서버 연동)
     startBtn?.addEventListener('click', async () => {
